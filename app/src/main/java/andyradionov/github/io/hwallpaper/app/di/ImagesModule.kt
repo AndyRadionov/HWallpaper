@@ -52,13 +52,15 @@ class ImagesModule {
     @Provides
     @Singleton
     fun provideOkHttp(): OkHttpClient {
+        val apiKey = "Client-ID " + API_KEY
+
         return OkHttpClient.Builder()
                 .addInterceptor { chain ->
                     val original = chain.request()
 
                     val request = original.newBuilder()
                             .header("Accept-Version", "v1")
-                            .header("Authorization", API_KEY)
+                            .header("Authorization", apiKey)
                             .method(original.method(), original.body())
                             .build()
 

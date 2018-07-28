@@ -8,11 +8,11 @@ package andyradionov.github.io.hwallpaper.model.dto
 
 data class Image(val id: String, val urls: Urls) {
 
-    val smallImage: String
-        get() = urls.small
+    val fullImage: String
+        get() = urls.full
 
     val mediumImage: String
         get() = urls.regular
 
-    data class Urls(val small: String, val regular: String)
+    data class Urls(val regular: String, val full: String)
 }

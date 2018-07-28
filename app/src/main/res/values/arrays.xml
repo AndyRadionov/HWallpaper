@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="titles">
+        <item>Best</item>
+        <item>Latest</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>curated</item>
+        <item>photos</item>
+    </string-array>
+</resources>

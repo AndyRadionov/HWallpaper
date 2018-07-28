@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HWallpaper</string>
+
+    <string name="search_action">Search</string>
+    <string name="no_images_found">No Images found!</string>
+    <string name="set_as_background">Set as Background</string>
+    <string name="provide_permission">Provide permission!</string>
 </resources>
