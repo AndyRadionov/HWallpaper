@@ -12,7 +12,6 @@ import andyradionov.github.io.hwallpaper.app.App
 import andyradionov.github.io.hwallpaper.app.GlideApp
 import andyradionov.github.io.hwallpaper.model.dto.Image
 
-
 /**
  * @author Andrey Radionov
  */
@@ -54,8 +53,6 @@ class ImagesAdapter(private val mClickListener: OnImageClickListener)
             View.OnClickListener {
 
         fun bind(position: Int) {
-            itemView.setOnClickListener(this)
-
             val button = itemView.findViewById<Button>(R.id.btn_save)
             button.setOnClickListener(this)
 
