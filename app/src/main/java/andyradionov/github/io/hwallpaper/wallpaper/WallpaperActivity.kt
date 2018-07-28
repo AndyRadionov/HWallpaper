@@ -1,7 +1,8 @@
-package andyradionov.github.io.hwallpaper
+package andyradionov.github.io.hwallpaper.wallpaper
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import andyradionov.github.io.hwallpaper.R
 
 class WallpaperActivity : AppCompatActivity() {
 
