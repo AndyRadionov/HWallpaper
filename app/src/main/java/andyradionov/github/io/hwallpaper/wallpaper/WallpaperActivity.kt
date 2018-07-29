@@ -29,7 +29,6 @@ class WallpaperActivity : AppCompatActivity(), WallpaperContract.View, ImagesAda
     private lateinit var imagesAdapter: ImagesAdapter
     private var query: String = EMPTY_QUERY
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper)

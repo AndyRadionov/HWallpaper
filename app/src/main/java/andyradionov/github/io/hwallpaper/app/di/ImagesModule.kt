@@ -15,6 +15,12 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import java.util.Collections.singletonList
+import okhttp3.CipherSuite
+import okhttp3.TlsVersion
+import okhttp3.ConnectionSpec
+import java.util.*
+
 
 /**
  * @author Andrey Radionov
@@ -52,7 +58,7 @@ class ImagesModule {
     @Provides
     @Singleton
     fun provideOkHttp(): OkHttpClient {
-        val apiKey = "Client-ID " + API_KEY
+        val apiKey = "Client-ID $API_KEY"
 
         return OkHttpClient.Builder()
                 .addInterceptor { chain ->
