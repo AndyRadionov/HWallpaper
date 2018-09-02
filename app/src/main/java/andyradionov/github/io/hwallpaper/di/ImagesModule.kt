@@ -1,6 +1,7 @@
 package andyradionov.github.io.hwallpaper.di
 
 import android.support.annotation.NonNull
+import android.util.Log
 import andyradionov.github.io.hwallpaper.BuildConfig
 import andyradionov.github.io.hwallpaper.app.BASE_URL
 import andyradionov.github.io.hwallpaper.data.network.ImagesApi
@@ -15,6 +16,9 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import andyradionov.github.io.hwallpaper.app.TLSSocketFactory
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
 
 
 /**
@@ -23,6 +27,10 @@ import javax.inject.Singleton
 
 @Module
 class ImagesModule {
+
+    companion object {
+        const val TAG = "ImagesModule"
+    }
 
     @NonNull
     @Provides
@@ -52,10 +60,23 @@ class ImagesModule {
     @NonNull
     @Provides
     @Singleton
-    fun provideOkHttp(): OkHttpClient {
+    fun provideOkHttpSSLBuilder(): OkHttpClient.Builder {
+        return try {
+            OkHttpClient.Builder()
+                    .sslSocketFactory(TLSSocketFactory())
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
+            OkHttpClient.Builder()
+        }
+    }
+
+    @NonNull
+    @Provides
+    @Singleton
+    fun provideOkHttp(clientBuilder: OkHttpClient.Builder): OkHttpClient {
         val apiKey = "Client-ID ${BuildConfig.ApiKey}"
 
-        return OkHttpClient.Builder()
+        return clientBuilder
                 .addInterceptor { chain ->
                     val original = chain.request()
 
