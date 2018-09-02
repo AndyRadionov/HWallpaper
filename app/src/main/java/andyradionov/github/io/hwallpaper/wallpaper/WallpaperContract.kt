@@ -1,6 +1,6 @@
 package andyradionov.github.io.hwallpaper.wallpaper
 
-import andyradionov.github.io.hwallpaper.model.dto.Image
+import andyradionov.github.io.hwallpaper.data.entities.Image
 
 /**
  * @author Andrey Radionov

@@ -1,10 +1,10 @@
-package andyradionov.github.io.hwallpaper.app.di
+package andyradionov.github.io.hwallpaper.di
 
 import android.support.annotation.NonNull
-import andyradionov.github.io.hwallpaper.app.API_KEY
+import andyradionov.github.io.hwallpaper.BuildConfig
 import andyradionov.github.io.hwallpaper.app.BASE_URL
-import andyradionov.github.io.hwallpaper.model.network.ImagesApi
-import andyradionov.github.io.hwallpaper.model.network.ImagesStore
+import andyradionov.github.io.hwallpaper.data.network.ImagesApi
+import andyradionov.github.io.hwallpaper.data.network.ImagesRepository
 import andyradionov.github.io.hwallpaper.wallpaper.WallpaperContract
 import andyradionov.github.io.hwallpaper.wallpaper.WallpaperPresenter
 import com.google.gson.Gson
@@ -15,11 +15,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import java.util.Collections.singletonList
-import okhttp3.CipherSuite
-import okhttp3.TlsVersion
-import okhttp3.ConnectionSpec
-import java.util.*
 
 
 /**
@@ -32,13 +27,13 @@ class ImagesModule {
     @NonNull
     @Provides
     @Singleton
-    fun provideWallpaperPresenter(imagesStore: ImagesStore): WallpaperContract.Presenter
-            = WallpaperPresenter(imagesStore)
+    fun provideWallpaperPresenter(imagesRepository: ImagesRepository): WallpaperContract.Presenter
+            = WallpaperPresenter(imagesRepository)
 
     @NonNull
     @Provides
     @Singleton
-    fun provideImagesStore(imagesApi: ImagesApi) = ImagesStore(imagesApi)
+    fun provideImagesStore(imagesApi: ImagesApi) = ImagesRepository(imagesApi)
 
     @NonNull
     @Provides
@@ -58,7 +53,7 @@ class ImagesModule {
     @Provides
     @Singleton
     fun provideOkHttp(): OkHttpClient {
-        val apiKey = "Client-ID $API_KEY"
+        val apiKey = "Client-ID ${BuildConfig.ApiKey}"
 
         return OkHttpClient.Builder()
                 .addInterceptor { chain ->

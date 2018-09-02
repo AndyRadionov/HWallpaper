@@ -10,7 +10,7 @@ import android.widget.ImageView
 import andyradionov.github.io.hwallpaper.R
 import andyradionov.github.io.hwallpaper.app.App
 import andyradionov.github.io.hwallpaper.app.GlideApp
-import andyradionov.github.io.hwallpaper.model.dto.Image
+import andyradionov.github.io.hwallpaper.data.entities.Image
 
 /**
  * @author Andrey Radionov

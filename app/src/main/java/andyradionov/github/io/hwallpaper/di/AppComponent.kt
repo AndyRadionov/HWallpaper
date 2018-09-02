@@ -1,4 +1,4 @@
-package andyradionov.github.io.hwallpaper.app.di
+package andyradionov.github.io.hwallpaper.di
 
 import andyradionov.github.io.hwallpaper.wallpaper.WallpaperActivity
 import dagger.Component

@@ -1,4 +1,4 @@
-package andyradionov.github.io.hwallpaper.model.dto
+package andyradionov.github.io.hwallpaper.data.entities
 
 /**
  * Model class contains Image id, background color and different image size urls

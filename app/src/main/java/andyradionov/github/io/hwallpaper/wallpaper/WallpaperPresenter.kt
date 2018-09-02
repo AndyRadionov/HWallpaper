@@ -1,21 +1,33 @@
 package andyradionov.github.io.hwallpaper.wallpaper
 
 import andyradionov.github.io.hwallpaper.app.App
-import andyradionov.github.io.hwallpaper.model.dto.Image
-import andyradionov.github.io.hwallpaper.model.network.ImagesCallback
-import andyradionov.github.io.hwallpaper.model.network.ImagesStore
+import andyradionov.github.io.hwallpaper.data.network.ImagesRepository
 import andyradionov.github.io.hwallpaper.util.isInternetAvailable
+import io.reactivex.disposables.Disposable
 
 /**
  * @author Andrey Radionov
  */
-class WallpaperPresenter(private val imagesStore: ImagesStore) : WallpaperContract.Presenter, ImagesCallback {
+class WallpaperPresenter(private val imagesRepository: ImagesRepository) : WallpaperContract.Presenter {
 
     private var view: WallpaperContract.View? = null
+    private var mSubscription: Disposable? = null
 
     override fun searchImages(query: String) {
         if (isInternetAvailable(App.appContext)) {
-            imagesStore.searchImages(query, this)
+            unsubscribe()
+
+            mSubscription = imagesRepository.searchImages(query)
+                    .doOnError { view?.showError() }
+                    .subscribe(
+                            {
+                                if (it.isEmpty()) {
+                                    view?.showError()
+                                } else {
+                                    view?.showImages(it)
+                                }
+                            },
+                            { view?.showError() })
         } else {
             view?.noInternet()
         }
@@ -23,7 +35,19 @@ class WallpaperPresenter(private val imagesStore: ImagesStore) : WallpaperContra
 
     override fun getLatestImages() {
         if (isInternetAvailable(App.appContext)) {
-            imagesStore.getImagesFromCategory(this)
+            unsubscribe()
+
+            imagesRepository.getImagesFromCategory()
+                    .doOnError { view?.showError() }
+                    .subscribe(
+                            {
+                                if (it.isEmpty()) {
+                                    view?.showError()
+                                } else {
+                                    view?.showImages(it)
+                                }
+                            },
+                            { view?.showError() })
         } else {
             view?.noInternet()
         }
@@ -35,13 +59,13 @@ class WallpaperPresenter(private val imagesStore: ImagesStore) : WallpaperContra
 
     override fun detachView() {
         view = null
+        unsubscribe()
     }
 
-    override fun onErrorLoading() {
-        view?.showError()
-    }
-
-    override fun onSuccessLoading(images: List<Image>) {
-        view?.showImages(images)
+    fun unsubscribe() {
+        if (mSubscription?.isDisposed == true) {
+            mSubscription?.dispose();
+            mSubscription = null;
+        }
     }
 }
