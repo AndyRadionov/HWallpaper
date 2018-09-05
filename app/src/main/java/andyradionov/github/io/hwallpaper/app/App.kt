@@ -2,8 +2,11 @@ package andyradionov.github.io.hwallpaper.app
 
 import android.app.Application
 import android.content.Context
-import andyradionov.github.io.hwallpaper.di.AppModule
-import toothpick.Toothpick
+import andyradionov.github.io.hwallpaper.di.appModule
+import andyradionov.github.io.hwallpaper.wallpaper.WallpaperContract
+import andyradionov.github.io.hwallpaper.wallpaper.WallpaperPresenter
+import org.koin.android.ext.android.startKoin
+import org.koin.dsl.module.module
 
 
 /**
@@ -17,8 +20,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val appScope = Toothpick.openScope(this)
-        appScope.installModules(AppModule())
+        startKoin(this, listOf(appModule))
         appContext = this
     }
 }

@@ -17,15 +17,14 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_wallpaper.*
-import toothpick.Toothpick
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 private const val EXTRA_QUERY = "extra_query"
 private const val EMPTY_QUERY = ""
 
 class WallpaperActivity : AppCompatActivity(), WallpaperContract.View, ImagesAdapter.OnImageClickListener {
 
-    @Inject lateinit var presenter: WallpaperContract.Presenter
+    val presenter by inject<WallpaperContract.Presenter>()
     private lateinit var imagesAdapter: ImagesAdapter
     private var query: String = EMPTY_QUERY
 
@@ -33,8 +32,6 @@ class WallpaperActivity : AppCompatActivity(), WallpaperContract.View, ImagesAda
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper)
 
-        val scope = Toothpick.openScope(application)
-        Toothpick.inject(this, scope)
         setUpRecycler()
         presenter.attachView(this)
     }
