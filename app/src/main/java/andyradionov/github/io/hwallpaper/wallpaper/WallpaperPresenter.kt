@@ -4,10 +4,12 @@ import andyradionov.github.io.hwallpaper.app.App
 import andyradionov.github.io.hwallpaper.data.network.ImagesRepository
 import andyradionov.github.io.hwallpaper.util.isInternetAvailable
 import io.reactivex.disposables.Disposable
+import javax.inject.Singleton
 
 /**
  * @author Andrey Radionov
  */
+@Singleton
 class WallpaperPresenter(private val imagesRepository: ImagesRepository) : WallpaperContract.Presenter {
 
     private var view: WallpaperContract.View? = null

@@ -11,13 +11,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import andyradionov.github.io.hwallpaper.R
-import andyradionov.github.io.hwallpaper.app.App
 import andyradionov.github.io.hwallpaper.app.GlideApp
 import andyradionov.github.io.hwallpaper.data.entities.Image
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import de.mateware.snacky.Snacky
 import kotlinx.android.synthetic.main.activity_wallpaper.*
+import toothpick.Toothpick
 import javax.inject.Inject
 
 private const val EXTRA_QUERY = "extra_query"
@@ -33,7 +33,8 @@ class WallpaperActivity : AppCompatActivity(), WallpaperContract.View, ImagesAda
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallpaper)
 
-        App.appComponent.inject(this)
+        val scope = Toothpick.openScope(application)
+        Toothpick.inject(this, scope)
         setUpRecycler()
         presenter.attachView(this)
     }
@@ -124,7 +125,7 @@ class WallpaperActivity : AppCompatActivity(), WallpaperContract.View, ImagesAda
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         try {
-                            WallpaperManager.getInstance(App.appContext).setBitmap(resource)
+                            WallpaperManager.getInstance(application).setBitmap(resource)
                             Snacky.builder().setText("Wallpaper set!")
                                     .setActivity(this@WallpaperActivity).success().show()
 

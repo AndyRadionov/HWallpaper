@@ -4,62 +4,43 @@ import android.support.annotation.NonNull
 import android.util.Log
 import andyradionov.github.io.hwallpaper.BuildConfig
 import andyradionov.github.io.hwallpaper.app.BASE_URL
+import andyradionov.github.io.hwallpaper.app.TLSSocketFactory
 import andyradionov.github.io.hwallpaper.data.network.ImagesApi
 import andyradionov.github.io.hwallpaper.data.network.ImagesRepository
 import andyradionov.github.io.hwallpaper.wallpaper.WallpaperContract
 import andyradionov.github.io.hwallpaper.wallpaper.WallpaperPresenter
 import com.google.gson.Gson
-import dagger.Module
-import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
-import andyradionov.github.io.hwallpaper.app.TLSSocketFactory
-import java.security.KeyManagementException
-import java.security.NoSuchAlgorithmException
+import toothpick.config.Module
 
 
 /**
  * @author Andrey Radionov
  */
 
-@Module
-class ImagesModule {
+class AppModule : Module() {
+
+    init {
+        bind(WallpaperContract.Presenter::class.java).toInstance(provideWallpaperPresenter())
+        bind(OkHttpClient.Builder::class.java).toInstance(provideOkHttpSSLBuilder())
+    }
 
     companion object {
-        const val TAG = "ImagesModule"
+        const val TAG = "AppModule"
     }
 
-    @NonNull
-    @Provides
-    @Singleton
-    fun provideWallpaperPresenter(imagesRepository: ImagesRepository): WallpaperContract.Presenter
-            = WallpaperPresenter(imagesRepository)
+
 
     @NonNull
-    @Provides
-    @Singleton
-    fun provideImagesStore(imagesApi: ImagesApi) = ImagesRepository(imagesApi)
+    fun provideWallpaperPresenter(): WallpaperContract.Presenter
+            = WallpaperPresenter(provideImagesStore())
+
+
 
     @NonNull
-    @Provides
-    @Singleton
-    fun provideImagesApi(httpClient: OkHttpClient): ImagesApi {
-
-        return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(Gson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(httpClient)
-                .build()
-                .create(ImagesApi::class.java)
-    }
-
-    @NonNull
-    @Provides
-    @Singleton
     fun provideOkHttpSSLBuilder(): OkHttpClient.Builder {
         return try {
             OkHttpClient.Builder()
@@ -71,12 +52,25 @@ class ImagesModule {
     }
 
     @NonNull
-    @Provides
-    @Singleton
-    fun provideOkHttp(clientBuilder: OkHttpClient.Builder): OkHttpClient {
+    private fun provideImagesStore() = ImagesRepository(provideImagesApi())
+
+    @NonNull
+    private fun provideImagesApi(): ImagesApi {
+
+        return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(Gson()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(provideOkHttp())
+                .build()
+                .create(ImagesApi::class.java)
+    }
+
+    @NonNull
+    private fun provideOkHttp(): OkHttpClient {
         val apiKey = "Client-ID ${BuildConfig.ApiKey}"
 
-        return clientBuilder
+        return provideOkHttpSSLBuilder()
                 .addInterceptor { chain ->
                     val original = chain.request()
 
